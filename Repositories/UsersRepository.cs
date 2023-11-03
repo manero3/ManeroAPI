@@ -1,0 +1,32 @@
+﻿using System.Diagnostics;
+using ManeroBackendAPI.Models.Entities;
+using ManeroBackendAPI.Contexts;
+using Microsoft.EntityFrameworkCore;
+
+namespace ManeroBackendAPI.Repositories;
+
+public interface IUsersRepository : IRepository<ApplicationUser, ApplicationDBContext>
+{
+    Task<ApplicationUser?> GetUserByEmailAsync(string email);
+}
+
+
+public class UsersRepository : Repository<ApplicationUser, ApplicationDBContext>, IUsersRepository
+{
+
+
+    public UsersRepository(ApplicationDBContext context) : base(context)
+    {
+
+    }
+    public async Task<ApplicationUser?> GetUserByEmailAsync(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.Trim() == email.Trim());
+        Debug.WriteLine($"Searched for email: {email}. Found: {user?.Email ?? "No user found"}");
+        return user;
+    }
+
+
+
+
+}
