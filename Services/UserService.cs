@@ -8,8 +8,11 @@ using ManeroBackendAPI.Models.DTOs;
 using ManeroBackendAPI.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace ManeroBackendAPI.Services;
+
+
 
 public interface IUserService
 {
@@ -22,15 +25,6 @@ public interface IUserService
 
 
 
-    //Task<ServiceResponse<Users>> UpdateUserAsync(int id, ServiceRequest<UserUpdateDto> request);
-    //Task<ServiceResponse<Users>> DeleteUserAsync(int id);
-    //Task<ServiceResponse<Users>> UpdatePasswordAsync(int id, ServiceRequest<UserUpdatePasswordDto> request);
-    //Task<ServiceResponse<Users>> UpdateEmailAsync(int id, ServiceRequest<UserUpdateEmailDto> request);
-    //Task<ServiceResponse<Users>> UpdateTwoFactorAsync(int id, ServiceRequest<UserUpdateTwoFactorDto> request);
-    //Task<ServiceResponse<Users>> UpdateOAuthAsync(int id, ServiceRequest<UserUpdateOAuthDto> request);
-    //Task<ServiceResponse<Users>> UpdateProfileAsync(int id, ServiceRequest<UserUpdateProfileDto> request);
-    //Task<ServiceResponse<Users>> UpdateProfileImageAsync(int id, ServiceRequest<UserUpdateProfileImageDto> request);
-    //Task<ServiceResponse<Users>> UpdateProfileBackgroundImageAsync(int id, ServiceRequest<UserUpdateProfileBackgroundImageDto> request);
 }
 
 public class UserService : IUserService
@@ -155,7 +149,7 @@ public class UserService : IUserService
                 return response;
             }
 
-          
+
             response.Content = await _usersRepository.GetUserByEmailAsync(email);
 
             if (response.Content == null)
@@ -243,6 +237,7 @@ public class UserService : IUserService
         return response;
     }
 
+
     public async Task<ServiceResponse<UserLoginDto>> LoginAsync(UserLoginDto loginDto)
     {
         var userResponse = await GetUserByEmailAsync(loginDto.Email);
@@ -257,8 +252,10 @@ public class UserService : IUserService
             };
         }
 
-        var token = await _tokenService.GetTokenAsync(user.Email, loginDto.Password, false);  // Assuming 'false' for 'isRememberMe'.
-        if (string.IsNullOrEmpty(token))
+        // Since TokenService is already generating a refresh token, retrieve it
+        // Since TokenService is now returning a UserWithTokenResponse object, retrieve it
+        var tokenResponse = await _tokenService.GetTokenAsync(user.Email, loginDto.Password, loginDto.RememberMe ?? false);
+        if (tokenResponse == null || string.IsNullOrEmpty(tokenResponse.Token))
         {
             return new ServiceResponse<UserLoginDto>
             {
@@ -267,16 +264,19 @@ public class UserService : IUserService
             };
         }
 
-        // Modify UserLoginDto to include the JWT token (and possibly refresh token)
-        loginDto.JwtToken = token;
-        // loginDto.RefreshToken = refreshToken;  // If you decide to also return the refresh token
+        // Now that we have a token response object, we can extract the tokens from it
+        loginDto.JwtToken = tokenResponse.Token;
+        loginDto.RefreshToken = tokenResponse.RefreshToken;
 
         return new ServiceResponse<UserLoginDto>
         {
             Content = loginDto,
             StatusCode = Enums.StatusCode.Ok
         };
+
     }
+
+
 
 
     private bool VerifyPassword(string password, string storedHash)

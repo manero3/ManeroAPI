@@ -21,7 +21,7 @@ public class TokenController : ControllerBase
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var token = await _tokenService.GetTokenAsync(model.Email, model.Password, (bool)model.IsRememberMe);
+        var token = await _tokenService.GetTokenAsync(model.Email, model.Password, (bool)model.RememberMe);
         if (string.IsNullOrEmpty(token))
         {
             ModelState.AddModelError(string.Empty, "Invalid login attempt.");

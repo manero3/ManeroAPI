@@ -16,9 +16,10 @@ public class UserLoginDto
     public string? OAuthId { get; set; }
     public string? OAuthProvider { get; set; }
 
-    public bool? IsRememberMe { get; set; }
+    public Boolean? RememberMe { get; set; }
 
     // Add these properties for JWT and refreshToken
     public string? JwtToken { get; set; }
     public string? RefreshToken { get; set; }
+
 }
