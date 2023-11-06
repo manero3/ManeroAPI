@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Svart\\Source\\Repos\\Webbutveckling\\Manero\\ManeroBackendAPI\\ManeroBackendAPI.csproj": {}
+    "C:\\ManeroBackend\\ManeroAPI\\ManeroBackendAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Svart\\Source\\Repos\\Webbutveckling\\Manero\\ManeroBackendAPI\\ManeroBackendAPI.csproj": {
+    "C:\\ManeroBackend\\ManeroAPI\\ManeroBackendAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Svart\\Source\\Repos\\Webbutveckling\\Manero\\ManeroBackendAPI\\ManeroBackendAPI.csproj",
+        "projectUniqueName": "C:\\ManeroBackend\\ManeroAPI\\ManeroBackendAPI.csproj",
         "projectName": "ManeroBackendAPI",
-        "projectPath": "C:\\Users\\Svart\\Source\\Repos\\Webbutveckling\\Manero\\ManeroBackendAPI\\ManeroBackendAPI.csproj",
-        "packagesPath": "C:\\Users\\Svart\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Svart\\Source\\Repos\\Webbutveckling\\Manero\\ManeroBackendAPI\\obj\\",
+        "projectPath": "C:\\ManeroBackend\\ManeroAPI\\ManeroBackendAPI.csproj",
+        "packagesPath": "C:\\Users\\aelro\\.nuget\\packages\\",
+        "outputPath": "C:\\ManeroBackend\\ManeroAPI\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Svart\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\aelro\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,7 +22,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -133,7 +128,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.403\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.402\\RuntimeIdentifierGraph.json"
         }
       }
     }
