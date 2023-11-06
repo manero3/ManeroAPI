@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Models\Schemas\" />
-    <Folder Include="Products\" />
+    <Folder Include="Products\categories\" />
   </ItemGroup>
 
 </Project>
