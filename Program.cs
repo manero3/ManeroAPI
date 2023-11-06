@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ManeroBackendAPI.Authentication;
+using ManeroBackendAPI.Contexts;
+using ManeroBackendAPI.Repositories;
+using ManeroBackendAPI.Services;
 using Google;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
@@ -12,10 +16,8 @@ using Microsoft.Extensions.Configuration;
 using ManeroBackendAPI.Authorization;
 using Microsoft.OpenApi.Models;
 using System.Security.Claims;
-using ManeroBackendAPI.Contexts;
-using ManeroBackendAPI.Services;
-using ManeroBackendAPI.Repositories;
-using ManeroBackendAPI.Authentication;
+using System.Text;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,11 +28,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddTransient<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<RefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IExternalAuthService, ExternalAuthService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddScoped<IPasswordHasher<ApplicationUser>, BCryptPasswordHasher<ApplicationUser>>();
+builder.Services.AddSingleton<ITokenValidationService, TokenValidationService>();
+
 
 
 builder.Services.AddHttpClient<IGoogleTokenService, GoogleTokenService>();
@@ -91,51 +96,22 @@ builder.Services.AddDbContext<ApplicationDBContext>(options =>
 
 
 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var serviceProvider = builder.Services.BuildServiceProvider();
+        var tokenValidationService = serviceProvider.GetRequiredService<ITokenValidationService>();
+        options.TokenValidationParameters = tokenValidationService.GetTokenValidationParameters();
+        // Additional configuration...
+    });
 
-// Authentication setup
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer(jwtOptions =>
-{
-    jwtOptions.Events = new JwtBearerEvents
-    {
-        OnTokenValidated = context =>
-        {
-            var claims = context.Principal.Claims;
-            foreach (var claim in claims)
-            {
-                Console.WriteLine($"Claim Type: {claim.Type}, Claim Value: {claim.Value}");
-            }
-            return Task.CompletedTask;
-        },
-        OnMessageReceived = context =>
-        {
-            Console.WriteLine($"Token received: {context.Token}");
-            return Task.CompletedTask;
-        },
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine($"Authentication failed: {context.Exception.Message}");
-            return Task.CompletedTask;
-        }
-    };
-    jwtOptions.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = "https://localhost:7286",
-       ValidAudience = "https://localhost:7286",
-        IssuerSigningKey = new SymmetricSecurityKey(
-                // Decode the base64 encoded secret
-                Convert.FromBase64String(builder.Configuration["JWT_SECURITY_KEY:Key"])
-            ),
-    };
-})
+
+
 .AddCookie()
 .AddGoogle(googleOptions =>
 {

@@ -15,7 +15,7 @@ namespace ManeroBackendAPI.Services;
 
 public interface IGoogleTokenService
 {
-    // Task<ServiceResponse<GoogleUser>> VerifyGoogleToken(string token);
+
     Task<ServiceResponse<GoogleUser>> CreateGoogleUserAsync(GoogleUser user);
     Task<ServiceResponse<string>> ExchangeCodeForTokenAsync(TokenRequest request);
     Task<ServiceResponse<TokenRequest>> GetTokenFromCodeAsync(TokenRequest request);
@@ -38,52 +38,7 @@ public class GoogleTokenService : IGoogleTokenService
         _httpClient = httpClient;
     }
 
-    //public async Task<ServiceResponse<GoogleUser>> VerifyGoogleToken([FromBody] string token)
-    //{
-    //   try
-    //    {
-    //        var validationSettings = new GoogleJsonWebSignature.ValidationSettings
-    //        {
-    //            Audience = new List<string> { _configuration["Authentication:Google:ClientId"]! }
 
-    //        };
-
-    //        GoogleJsonWebSignature.Payload payload = await GoogleJsonWebSignature.ValidateAsync(token, validationSettings);
-
-    //        if (payload == null)
-    //        {
-    //            Console.WriteLine("Invalid Google Token.");
-    //            return null!;
-    //        }
-
-    //        return new ServiceResponse<GoogleUser>
-    //        {
-    //            StatusCode = Enums.StatusCode.Ok,
-    //            Content = new GoogleUser
-    //            {
-    //                UserId = payload.Subject,
-    //                Email = payload.Email,
-    //                EmailVerified = payload.EmailVerified,
-    //                Name = payload.Name,
-    //                PictureUrl = payload.Picture,
-    //                Locale = payload.Locale,
-    //                FamilyName = payload.FamilyName,
-    //                GivenName = payload.GivenName
-    //            }
-    //        };
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Console.WriteLine($"Token verification failed with error: {ex.Message}");
-    //        return new ServiceResponse<GoogleUser>
-    //        {
-    //            StatusCode = Enums.StatusCode.BadRequest,
-    //            Content = null,
-    //            Message = $"Failed to verify token. Reason: {ex.Message}"
-    //        };
-    //    }
-
-    //}
     public async Task<ServiceResponse<string>> ExchangeCodeForTokenAsync([FromBody] TokenRequest request)
     {
         var code = request.Code;
@@ -117,49 +72,37 @@ public class GoogleTokenService : IGoogleTokenService
 
             return new ServiceResponse<string>
             {
-                StatusCode = StatusCode.BadRequest,
+                StatusCode = Enums.StatusCode.BadRequest,
                 Content = null,
-                Message = $"Error from Google API: {responseBody}" // This will include Google's error message
+                Message = $"Error from Google API: {responseBody}"
             };
         }
 
-        // Assuming success, the rest of your code to handle successful token retrieval would go here...
+
 
         // Placeholder for success scenario
         return new ServiceResponse<string>
         {
-            StatusCode = StatusCode.Ok,
-            Content = "Token processed successfully.",  // Adjust as needed.
-            Message = responseBody // For now, just return the whole responseBody. Adjust as needed.
+            StatusCode = Enums.StatusCode.Ok,
+            Content = "Token processed successfully.",
+            Message = responseBody
         };
     }
 
     private string GeneratePlaceholderPassword()
     {
-        // This is just an example. You can create a random string or use any other placeholder value.
+
         return "RegisteredThroughGoogle";
     }
     public async Task<ServiceResponse<GoogleUser>> CreateGoogleUserAsync(GoogleUser user)
     {
-        //// Check if user exists
-        //var existingUser = await _userService.GetUserByEmailAsync(user.Email);
-        //if (existingUser != null)
-        //{
-        //    // User already exists. Depending on your logic, you might want to 
-        //    // simply return an indication that the user already exists.
-        //    return new ServiceResponse<GoogleUser>
-        //    {
-        //        StatusCode = Enums.StatusCode.Conflict,
-        //        Content = null,
-        //        Message = "User already exists."
-        //    };
-        //}
+
 
         // Map GoogleUser to your registration DTO
         var newUserDto = new OAuthRegistrationDTO
         {
             Email = user.Email,
-            OAuthId = user.UserId,  // Assuming `UserId` holds the unique Google ID
+            OAuthId = user.UserId,
             OAuthProvider = "Google",
             Password = GeneratePlaceholderPassword()
         };
@@ -168,20 +111,20 @@ public class GoogleTokenService : IGoogleTokenService
         var serviceResponse = await _userService.CreateGoogleUserAsync(new ServiceRequest<OAuthRegistrationDTO> { Content = newUserDto });
 
         // If user creation was successful, return the GoogleUser.
-        if (serviceResponse.StatusCode == StatusCode.Created)
+        if (serviceResponse.StatusCode == Enums.StatusCode.Created)
         {
             return new ServiceResponse<GoogleUser>
             {
-                StatusCode = StatusCode.Created,
+                StatusCode = Enums.StatusCode.Created,
                 Content = user
             };
         }
         else
         {
-            // Handle other cases where user creation was not successful. Adjust the StatusCode and Message as needed.
+
             return new ServiceResponse<GoogleUser>
             {
-                StatusCode = StatusCode.InternalServerError, // Adjust this based on your enum values and the type of error.
+                StatusCode = Enums.StatusCode.InternalServerError,
                 Content = null,
                 Message = "Failed to create user."
             };
@@ -190,11 +133,11 @@ public class GoogleTokenService : IGoogleTokenService
 
     public async Task<ServiceResponse<TokenRequest>> GetTokenFromCodeAsync(TokenRequest request)
     {
-        // This can simply be an alias for the ExchangeCodeForTokenAsync method
+
         var token = await ExchangeCodeForTokenAsync(request);
         var response = new ServiceResponse<TokenRequest>
         {
-            StatusCode = token.StatusCode == StatusCode.Ok ? StatusCode.Ok : StatusCode.BadRequest,
+            StatusCode = (token.StatusCode == Enums.StatusCode.Ok) ? Enums.StatusCode.Ok : Enums.StatusCode.BadRequest,
             Content = request,
             Message = token.Message
         };
@@ -215,7 +158,7 @@ public class GoogleTokenService : IGoogleTokenService
         {
             return new ServiceResponse<GoogleUser>
             {
-                StatusCode = StatusCode.BadRequest,
+                StatusCode = Enums.StatusCode.BadRequest,
                 Content = null,
                 Message = "Failed to fetch Google user with token."
             };
@@ -237,13 +180,12 @@ public class GoogleTokenService : IGoogleTokenService
 
         return new ServiceResponse<GoogleUser>
         {
-            StatusCode = StatusCode.Ok,
+            StatusCode = Enums.StatusCode.Ok,
             Content = googleUser
         };
     }
 
-    // This DTO matches the Google user info response. 
-    // Adjust the property names and types as needed based on the actual response structure.
+
     private class GoogleUserResponse
     {
         public string sub { get; set; }

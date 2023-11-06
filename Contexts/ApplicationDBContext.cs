@@ -1,4 +1,5 @@
-﻿using ManeroBackendAPI.Models.Entities;
+﻿using ManeroBackendAPI.Models;
+using ManeroBackendAPI.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +16,9 @@ public class ApplicationDBContext : IdentityDbContext<ApplicationUser, IdentityR
     {
     }
 
-
    
- 
     public DbSet<UserVerificationCode> UserVerificationCodes { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,7 +27,12 @@ public class ApplicationDBContext : IdentityDbContext<ApplicationUser, IdentityR
         modelBuilder.Entity<ApplicationUser>()
             .HasIndex(u => u.Email)
             .IsUnique();
-      
+
+        modelBuilder.Entity<RefreshToken>()
+           .HasOne(rt => rt.User)
+           .WithMany(u => u.RefreshTokens)
+           .HasForeignKey(rt => rt.UserId);
+
 
 
     }

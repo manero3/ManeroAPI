@@ -188,4 +188,3 @@ C:\Users\Svart\Source\Repos\Webbutveckling\Manero\ManeroBackendAPI\obj\Debug\net
 C:\Users\Svart\Source\Repos\Webbutveckling\Manero\ManeroBackendAPI\obj\Debug\net7.0\ManeroBackendAPI.pdb
 C:\Users\Svart\Source\Repos\Webbutveckling\Manero\ManeroBackendAPI\obj\Debug\net7.0\ManeroBackendAPI.genruntimeconfig.cache
 C:\Users\Svart\Source\Repos\Webbutveckling\Manero\ManeroBackendAPI\obj\Debug\net7.0\ref\ManeroBackendAPI.dll
-C:\Users\Svart\Source\Repos\Webbutveckling\Manero\ManeroBackendAPI\bin\Debug\net7.0\ManeroBackendAPI.staticwebassets.runtime.json

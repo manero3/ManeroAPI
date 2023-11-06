@@ -1,4 +1,5 @@
-﻿using ManeroBackendAPI.Models.Entities;
+﻿using ManeroBackendAPI.Models;
+using ManeroBackendAPI.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace ManeroBackendAPI.Contexts
@@ -13,7 +14,9 @@ namespace ManeroBackendAPI.Contexts
         public string? OAuthId { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
 
-     
+        public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new HashSet<RefreshToken>();
+
+
     }
 
 
