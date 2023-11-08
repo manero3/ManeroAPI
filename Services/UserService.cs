@@ -73,7 +73,8 @@ public class UserService : IUserService
             {
                 UserName = request.Content.Email,
                 Email = request.Content.Email,
-                // Set other required fields as needed
+                FirstName = request.Content.FirstName,
+                LastName = request.Content.LastName,
                 EmailConfirmed = true // Usually, you would want to send a confirmation email to set this to true
             };
 
