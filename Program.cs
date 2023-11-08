@@ -18,7 +18,6 @@ using Microsoft.OpenApi.Models;
 using System.Security.Claims;
 using System.Text;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -28,6 +27,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<ProductContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 builder.Services.AddScoped<RefreshTokenRepository, RefreshTokenRepository>();
 builder.Services.AddTransient<IUserService, UserService>();
@@ -35,6 +36,11 @@ builder.Services.AddTransient<IExternalAuthService, ExternalAuthService>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddScoped<IPasswordHasher<ApplicationUser>, BCryptPasswordHasher<ApplicationUser>>();
 builder.Services.AddSingleton<ITokenValidationService, TokenValidationService>();
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 
 
