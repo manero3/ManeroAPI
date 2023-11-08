@@ -21,6 +21,9 @@ public class UserRegistrationDto
     public string? OAuthId { get; set; }
     public string? OAuthProvider { get; set; }
 
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+
     public DateTime CreateDate { get; set; } = DateTime.UtcNow;
 
 }
