@@ -73,8 +73,10 @@ public class UserService : IUserService
             {
                 UserName = request.Content.Email,
                 Email = request.Content.Email,
-                // Set other required fields as needed
-                EmailConfirmed = true // Usually, you would want to send a confirmation email to set this to true
+                FirstName = request.Content.FirstName,
+                LastName = request.Content.LastName,
+               
+                EmailConfirmed = true 
             };
 
             var result = await _userManager.CreateAsync(newUser, request.Content.Password);
